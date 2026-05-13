@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>za.studios | Visual Identity </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-primary: #050505;
+            --accent-blue: #3b82f6;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-primary);
+            color: #fafafa;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, .font-syne { font-family: 'Syne', sans-serif; }
+
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+        }
+
+        .project-card { transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
+        .project-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: var(--accent-blue);
+            transform: translateY(-8px);
+        }
+
+        .filter-btn.active {
+            background-color: var(--accent-blue);
+            color: white;
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
+        }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
+        
+        .like-active { color: #ef4444 !important; fill: #ef4444; }
+        
+        #loginOverlay { backdrop-filter: blur(40px); background: rgba(0,0,0,0.85); }
+
+        .bento-social-item {
+            transition: all 0.4s ease;
+        }
+        .bento-social-item:hover {
+            transform: scale(1.02);
+            border-color: var(--accent-blue);
+        }
+    </style>
+</head>
+<body class="selection:bg-blue-600 selection:text-white">
+
+    <!-- Login System Overlay -->
+    <div id="loginOverlay" class="fixed inset-0 z-[200] flex items-center justify-center p-6">
+        <div class="glass max-w-md w-full p-10 rounded-[3rem] text-center border-white/10 shadow-2xl">
+            <div class="w-20 h-20 bg-blue-600 rounded-2xl mx-auto mb-8 flex items-center justify-center">
+                <i data-lucide="shield-check" class="w-10 h-10 text-white"></i>
+            </div>
+            <h2 class="text-3xl font-syne font-bold mb-2 uppercase tracking-tighter">SELAMAT DATANG</h2>
+            <p class="text-gray-500 text-sm mb-8 italic">Silakan masuk untuk melihat arsip za.studios</p>
+            
+            <div class="space-y-4">
+                <div id="loginChoice" class="flex gap-4">
+                    <button onclick="showLoginForm('visitor')" class="flex-1 bg-white/5 border border-white/10 py-5 rounded-2xl font-bold text-[10px] uppercase tracking-widest hover:bg-blue-600 transition-all">Tamu</button>
+                    <button onclick="showLoginForm('admin')" class="flex-1 bg-white/5 border border-white/10 py-5 rounded-2xl font-bold text-[10px] uppercase tracking-widest hover:bg-white hover:text-black transition-all">Admin</button>
+                </div>
+
+                <div id="formInputs" class="hidden space-y-4">
+                    <input type="text" id="usernameInput" placeholder="Siapa nama Anda?" class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 focus:outline-none focus:border-blue-500 text-sm">
+                    <input type="password" id="passwordInput" placeholder="Password Admin" class="hidden w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 focus:outline-none focus:border-blue-500 text-sm">
+                    <button onclick="handleLogin()" class="w-full bg-blue-600 py-4 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:scale-105 transition-all">Mulai Eksplorasi</button>
+                    <button onclick="resetLoginChoice()" class="text-[9px] text-gray-500 uppercase tracking-widest hover:text-white">Kembali ke pilihan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigasi -->
+    <nav class="fixed top-6 left-1/2 -translate-x-1/2 z-50 w-[90%] max-w-4xl glass rounded-full px-8 py-4 flex items-center justify-between opacity-0 transition-opacity duration-1000" id="mainNav">
+        <a href="#home" class="text-xl font-800 tracking-tighter uppercase font-syne">za.<span class="text-blue-500">studios</span></a>
+        <div class="hidden md:flex items-center space-x-8 text-[10px] font-bold tracking-[0.2em] uppercase">
+            <a href="#portfolio" class="hover:text-blue-500 transition-all">Galeri</a>
+            <a href="#community" class="hover:text-blue-500 transition-all">Ulasan</a>
+            <a href="#contact-bento" class="hover:text-blue-500 transition-all">Sosial</a>
+        </div>
+        <div class="flex items-center space-x-4">
+            <span id="userBadge" class="text-[9px] bg-white/10 px-3 py-1 rounded-full uppercase tracking-widest font-bold hidden">Tamu</span>
+            <button onclick="logout()" class="p-2 hover:text-red-500 transition-colors"><i data-lucide="log-out" class="w-4 h-4"></i></button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center justify-center pt-32 pb-20 px-6 relative">
+        <div class="max-w-7xl mx-auto text-center z-10">
+            <div class="inline-block glass px-4 py-2 rounded-full mb-8 border-blue-500/30">
+                <span class="text-[10px] font-bold tracking-[0.4em] uppercase text-blue-400">Arsip Visual 2024 - 2026</span>
+            </div>
+            <h1 class="text-6xl md:text-[140px] font-800 mb-8 tracking-tighter leading-[0.85] font-syne uppercase">
+                Beyond <br/> The <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-white italic">Pixels.</span>
+            </h1>
+            <p class="text-gray-500 text-lg md:text-xl max-w-2xl mx-auto mb-12 font-light leading-relaxed">
+                Senang melihat Anda di sini, <span id="welcomeName" class="text-white font-bold">Kawan</span>. Jelajahi evolusi desain saya dari bangku sekolah hingga dunia profesional.
+            </p>
+        </div>
+    </section>
+
+    <!-- Galeri Projek -->
+    <section id="portfolio" class="py-24 px-6 bg-[#080808]">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
+                <div>
+                    <h2 class="text-4xl md:text-6xl font-syne font-800 tracking-tighter uppercase mb-4 italic">Karya Terpilih</h2>
+                    <p class="text-gray-500">Filter berdasarkan fase perjalanan kreatif saya.</p>
+                </div>
+                <div class="flex flex-wrap gap-2" id="filterContainer">
+                    <button class="filter-btn active px-6 py-3 rounded-xl border border-white/5 text-[9px] font-bold uppercase tracking-[0.2em] transition-all" data-filter="all">Semua</button>
+                    <button class="filter-btn px-6 py-3 rounded-xl border border-white/5 text-[9px] font-bold uppercase tracking-[0.2em] transition-all" data-filter="grade10">Kelas 10</button>
+                    <button class="filter-btn px-6 py-3 rounded-xl border border-white/5 text-[9px] font-bold uppercase tracking-[0.2em] transition-all" data-filter="grade11">Kelas 11</button>
+                    <button class="filter-btn px-6 py-3 rounded-xl border border-white/5 text-[9px] font-bold uppercase tracking-[0.2em] transition-all" data-filter="grade12">Kelas 12</button>
+                    <button class="filter-btn px-6 py-3 rounded-xl border border-white/5 text-[9px] font-bold uppercase tracking-[0.2em] transition-all" data-filter="freelance">Freelance</button>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" id="projectGrid"></div>
+        </div>
+    </section>
+
+    <!-- Ulasan & Pesan Langsung -->
+    <section id="community" class="py-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Ulasan -->
+                <div>
+                    <h2 class="text-4xl font-syne font-800 tracking-tighter uppercase mb-12">Apa Kata Mereka</h2>
+                    <div class="space-y-6">
+                        <div class="glass p-8 rounded-3xl">
+                            <div class="flex gap-1 mb-4 text-blue-500">
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                                <i data-lucide="star" class="w-4 h-4 fill-current"></i>
+                            </div>
+                            <p class="text-gray-400 italic mb-6">"Desain bento grid-nya sangat inspiratif. Sangat jarang melihat siswa SMK memiliki taste visual sekuat ini."</p>
+                            <p class="text-[10px] font-bold uppercase tracking-widest">— Raka, UI Mentor</p>
+                        </div>
+                        <div class="glass p-8 rounded-3xl border-blue-500/20">
+                            <p class="text-gray-400 italic mb-6">"Pengerjaan proyek freelance logonya sangat cepat dan komunikatif. Hasilnya melebihi ekspektasi!"</p>
+                            <p class="text-[10px] font-bold uppercase tracking-widest">— Owner, Coffee House</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kirim Pesan -->
+                <div class="glass p-10 rounded-[3rem] border-white/10 relative overflow-hidden">
+                    <div class="absolute top-0 right-0 p-8 opacity-10">
+                        <i data-lucide="send" class="w-32 h-32"></i>
+                    </div>
+                    <h3 class="text-3xl font-syne font-bold mb-2 italic">Kirim Pesan</h3>
+                    <p class="text-gray-500 text-sm mb-8">Punya proyek atau sekedar ingin menyapa?</p>
+                    
+                    <form class="space-y-4" onsubmit="event.preventDefault(); alert('Pesan Anda telah terkirim ke za.studios!');">
+                        <input type="text" placeholder="Subjek Pesan" class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 focus:outline-none focus:border-blue-500 text-sm">
+                        <textarea placeholder="Tulis sesuatu..." rows="4" class="w-full bg-white/5 border border-white/10 rounded-xl px-6 py-4 focus:outline-none focus:border-blue-500 text-sm"></textarea>
+                        <button class="w-full bg-white text-black py-4 rounded-xl font-bold text-[10px] uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all">Kirim Sekarang</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bento Social Media Links -->
+    <section id="contact-bento" class="py-24 px-6 bg-[#0a0a0a]">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-center font-syne font-800 text-4xl uppercase tracking-tighter mb-16 italic">Connect With Me</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <!-- Instagram -->
+                <a href="#" class="bento-social-item glass p-8 rounded-[2rem] flex flex-col items-center justify-center text-center group">
+                    <i data-lucide="instagram" class="w-10 h-10 mb-4 group-hover:text-pink-500 transition-colors"></i>
+                    <span class="text-[10px] font-bold uppercase tracking-widest">Instagram</span>
+                    <span class="text-[8px] text-gray-500 mt-1 italic">@za.studios</span>
+                </a>
+                <!-- Behance -->
+                <a href="#" class="bento-social-item glass p-8 rounded-[2rem] flex flex-col items-center justify-center text-center group md:row-span-2">
+                    <div class="bg-blue-600/20 p-4 rounded-2xl mb-4 group-hover:bg-blue-600 transition-colors">
+                        <i data-lucide="layout-grid" class="w-8 h-8"></i>
+                    </div>
+                    <span class="text-[10px] font-bold uppercase tracking-widest">Behance</span>
+                    <p class="text-[8px] text-gray-500 mt-2 leading-relaxed">Lihat studi kasus <br/> mendalam di sini.</p>
+                </a>
+                <!-- WhatsApp -->
+                <a href="#" class="bento-social-item glass p-8 rounded-[2rem] flex flex-col items-center justify-center text-center group">
+                    <i data-lucide="phone" class="w-10 h-10 mb-4 group-hover:text-green-500 transition-colors"></i>
+                    <span class="text-[10px] font-bold uppercase tracking-widest">WhatsApp</span>
+                    <span class="text-[8px] text-gray-500 mt-1 italic">081235479531</span>
+                </a>
+                <!-- LinkedIn -->
+                <a href="#" class="bento-social-item glass p-8 rounded-[2rem] flex flex-col items-center justify-center text-center group">
+                    <i data-lucide="linkedin" class="w-10 h-10 mb-4 group-hover:text-blue-400 transition-colors"></i>
+                    <span class="text-[10px] font-bold uppercase tracking-widest">TikTok</span>
+                    <span class="text-[8px] text-gray-500 mt-1 italic">za.studios</span>
+                </a>
+                <!-- Dribbble -->
+                <a href="#" class="bento-social-item glass p-8 rounded-[2rem] flex flex-col items-center justify-center text-center group col-span-2 md:col-span-1">
+                    <i data-lucide="dribbble" class="w-10 h-10 mb-4 group-hover:text-pink-400 transition-colors"></i>
+                    <span class="text-[10px] font-bold uppercase tracking-widest">Dribbble</span>
+                </a>
+                <!-- Email -->
+                <a href="mailto:hello@za.studios" class="bento-social-item glass p-8 rounded-[2rem] flex items-center justify-between col-span-2 md:col-span-2 group">
+                    <div class="flex items-center gap-4">
+                        <div class="p-3 glass rounded-xl">
+                            <i data-lucide="mail" class="w-6 h-6"></i>
+                        </div>
+                        <div class="text-left">
+                            <span class="text-[10px] font-bold uppercase tracking-widest block">Email</span>
+                            <span class="text-xs text-gray-400">za.studios@gmail.com</span>
+                        </div>
+                    </div>
+                    <i data-lucide="arrow-up-right" class="w-5 h-5 opacity-0 group-hover:opacity-100 transition-all"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal Projek -->
+    <div id="projectModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-black/95 backdrop-blur-xl" onclick="closeModal()"></div>
+        <div class="relative glass w-full max-w-6xl max-h-[92vh] rounded-[3rem] overflow-hidden flex flex-col lg:flex-row shadow-2xl">
+            <button onclick="closeModal()" class="absolute top-8 right-8 z-10 glass p-3 rounded-full text-white hover:bg-blue-600 transition-all">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="lg:w-2/3 bg-[#0a0a0a] flex items-center justify-center p-6">
+                <img id="modalImg" src="" alt="Preview" class="w-full h-full object-contain rounded-2xl">
+            </div>
+            <div class="lg:w-1/3 flex flex-col bg-black/20 p-10 lg:p-12 overflow-y-auto">
+                <span id="modalTag" class="text-blue-500 text-[10px] font-bold tracking-[0.3em] uppercase mb-4 block italic">Process</span>
+                <h3 id="modalTitle" class="text-3xl font-syne font-bold mb-6 italic uppercase">Judul</h3>
+                
+                <div class="space-y-6">
+                    <div>
+                        <h4 class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2 italic">Tentang Karya</h4>
+                        <p id="modalDesc" class="text-gray-400 leading-relaxed text-sm font-light">Deskripsi...</p>
+                    </div>
+                    <div>
+                        <h4 class="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2 italic">Software Digunakan</h4>
+                        <div class="flex gap-2 flex-wrap" id="modalStack">
+                             <span class="text-[9px] bg-white/5 px-3 py-1 rounded-full border border-white/10">Adobe Illustrator</span>
+                             <span class="text-[9px] bg-white/5 px-3 py-1 rounded-full border border-white/10">Figma</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-auto pt-12 flex items-center justify-between">
+                    <div class="flex gap-6">
+                        <button onclick="handleLike(this)" class="flex items-center gap-2 group transition-all">
+                            <i data-lucide="heart" class="w-5 h-5 group-hover:text-red-500"></i>
+                            <span class="text-xs font-bold" id="likeCount">0</span>
+                        </button>
+                        <button class="flex items-center gap-2 group">
+                            <i data-lucide="message-circle" class="w-5 h-5 group-hover:text-blue-500"></i>
+                            <span class="text-xs font-bold">4</span>
+                        </button>
+                    </div>
+                    <button onclick="handleShare()" class="flex items-center gap-2 hover:text-blue-500">
+                        <i data-lucide="share-2" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-12 px-6 border-t border-white/5">
+        <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-gray-600 text-[10px] font-bold uppercase tracking-widest">
+            <p>&copy; 2026 za.studios — Crafting Visual Futures</p>
+            <div class="flex space-x-8 mt-6 md:mt-0">
+                <span>Tuban, Jawa Timur, Indonesia</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const projects = [
+            // Kelas 10
+            { id: 1, title: "Symmetry Foundation", category: "grade10", img: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=800", likes: 12, desc: "Langkah pertama saya mempelajari keseimbangan visual. Menggunakan teknik mirroring untuk menciptakan harmoni dalam bentuk yang paling dasar." },
+            { id: 2, title: "Chroma Spectrum", category: "grade10", img: "https://images.unsplash.com/photo-1541701494587-cb58502866ab?q=80&w=800", likes: 25, desc: "Eksperimen awal dengan roda warna. Mempelajari bagaimana warna komplementer dapat menarik perhatian audiens secara instan." },
+            { id: 3, title: "Vector Landscape", category: "grade10", img: "https://images.unsplash.com/photo-1557683316-973673baf926?q=80&w=800", likes: 18, desc: "Belajar menggunakan Pen Tool di Adobe Illustrator untuk membuat pemandangan minimalis." },
+            // Kelas 11
+            { id: 4, title: "Arcana Brand Identity", category: "grade11", img: "https://images.unsplash.com/photo-1634942537034-2531766767d7?q=80&w=800", likes: 42, desc: "Sebuah proyek identitas visual untuk merk fiktif. Fokus pada sistem grid dan bagaimana logo tetap terbaca dalam ukuran sekecil apapun." },
+            { id: 5, title: "Swiss Poster Design", category: "grade11", img: "https://images.unsplash.com/photo-1572044162444-ad60f128bde2?q=80&w=800", likes: 31, desc: "Penghormatan untuk gaya International Typographic. Mengutamakan objektivitas, keterbacaan, dan struktur grid yang sangat ketat." },
+            // Kelas 12
+            { id: 6, title: "Synthwave Mobile UI", category: "grade12", img: "https://images.unsplash.com/photo-1614850523296-e8c0a4ef336b?q=80&w=800", likes: 89, desc: "Eksplorasi antarmuka aplikasi pemutar musik dengan tema retro-futuristik. Menggunakan efek glow dan gradient yang kompleks." },
+            { id: 7, title: "Glassmorphism Dashboard", category: "grade12", img: "https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=800", likes: 77, desc: "Dashboard manajemen data yang menggunakan prinsip kedalaman visual melalui lapisan transparan dan blur." },
+            // Freelance
+            { id: 8, title: "Lunar Coffee Rebrand", category: "freelance", img: "https://images.unsplash.com/photo-1559056199-641a0ac8b55e?q=80&w=800", likes: 104, desc: "Proyek komersial untuk kedai kopi lokal. Menciptakan suasana hangat namun modern yang tercermin dalam seluruh kemasan produk." },
+            { id: 9, title: "Crypto Genesis Logo", category: "freelance", img: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=800", likes: 120, desc: "Logo untuk platform blockchain baru. Menggabungkan konsep rantai dan simbol 'G' yang dinamis." }
+        ];
+
+        let currentUser = { name: '', role: '' };
+
+        function showLoginForm(type) {
+            document.getElementById('loginChoice').classList.add('hidden');
+            document.getElementById('formInputs').classList.remove('hidden');
+            const passInput = document.getElementById('passwordInput');
+            const userInput = document.getElementById('usernameInput');
+            if(type === 'admin') {
+                passInput.classList.remove('hidden');
+                userInput.placeholder = "ID Admin";
+            } else {
+                passInput.classList.add('hidden');
+                userInput.placeholder = "Tulis nama Anda";
+            }
+            currentUser.role = type;
+        }
+
+        function resetLoginChoice() {
+            document.getElementById('loginChoice').classList.remove('hidden');
+            document.getElementById('formInputs').classList.add('hidden');
+        }
+
+        function handleLogin() {
+            const userVal = document.getElementById('usernameInput').value;
+            const passVal = document.getElementById('passwordInput').value;
+            if(!userVal) return alert("Silakan isi nama terlebih dahulu.");
+            if(currentUser.role === 'admin' && passVal !== 'admin123') return alert("Password Admin Salah!");
+            
+            currentUser.name = userVal;
+            document.getElementById('loginOverlay').classList.add('hidden');
+            document.getElementById('mainNav').classList.remove('opacity-0');
+            document.getElementById('welcomeName').innerText = userVal;
+            const badge = document.getElementById('userBadge');
+            badge.innerText = currentUser.role === 'admin' ? 'Admin' : 'Tamu';
+            badge.classList.remove('hidden');
+            if(currentUser.role === 'admin') badge.classList.add('bg-blue-600', 'text-white');
+            renderProjects();
+        }
+
+        function logout() { location.reload(); }
+
+        function renderProjects(filter = 'all') {
+            const projectGrid = document.getElementById('projectGrid');
+            projectGrid.innerHTML = '';
+            const filtered = filter === 'all' ? projects : projects.filter(p => p.category === filter);
+
+            filtered.forEach((p, i) => {
+                const card = document.createElement('div');
+                card.className = `project-card glass rounded-[2.5rem] overflow-hidden cursor-pointer flex flex-col`;
+                card.innerHTML = `
+                    <div class="h-64 relative overflow-hidden group">
+                        <img src="${p.img}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
+                        <div class="absolute top-4 left-4 glass px-3 py-1 rounded-full text-[8px] font-bold uppercase tracking-widest text-blue-400">
+                            ${p.category}
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <h3 class="text-xl font-syne font-bold mb-3 uppercase italic tracking-tighter">${p.title}</h3>
+                        <p class="text-[10px] text-gray-500 line-clamp-2 mb-4 font-light">${p.desc}</p>
+                        <div class="flex items-center justify-between text-gray-400">
+                            <span class="flex items-center gap-1 text-[10px] font-bold"><i data-lucide="heart" class="w-3 h-3"></i> ${p.likes}</span>
+                            <span class="text-[10px] font-bold uppercase tracking-widest text-blue-500">Lihat Detail</span>
+                        </div>
+                    </div>
+                `;
+                card.onclick = () => openModal(p.id);
+                projectGrid.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        function openModal(id) {
+            const p = projects.find(proj => proj.id === id);
+            document.getElementById('modalImg').src = p.img;
+            document.getElementById('modalTitle').innerText = p.title;
+            document.getElementById('modalDesc').innerText = p.desc;
+            document.getElementById('likeCount').innerText = p.likes;
+            document.getElementById('projectModal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            lucide.createIcons();
+        }
+
+        function closeModal() {
+            document.getElementById('projectModal').classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        function handleLike(btn) {
+            const icon = btn.querySelector('i');
+            const count = btn.querySelector('#likeCount');
+            const current = parseInt(count.innerText);
+            if(icon.classList.contains('like-active')) {
+                icon.classList.remove('like-active');
+                count.innerText = current - 1;
+            } else {
+                icon.classList.add('like-active');
+                count.innerText = current + 1;
+            }
+        }
+
+        function handleShare() {
+            alert("Tautan karya berhasil disalin ke papan klip!");
+        }
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderProjects(btn.dataset.filter);
+            };
+        });
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>
